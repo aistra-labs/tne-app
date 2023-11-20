@@ -1,0 +1,12 @@
+.accounting-container{
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 100%;
+    .accounting-content{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
