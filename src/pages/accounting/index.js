@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -8,6 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import "./accounting.css";
+import usePostApi from "../../components/usePostApi";
 
 const columns = [
   { id: "date", label: "Date", minWidth: 120 },
@@ -49,6 +50,14 @@ const rows = generateTableData();
 const Accounting = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [pageData, setPageData] = useState({
+    page: 0,
+    limit: 10,
+  });
+
+  const apiUrl = "http://51.112.12.168:8080/tne/api/v1/account/ledger";
+
+  const { response, error, isLoading } = usePostApi(apiUrl, pageData);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -63,6 +72,8 @@ const Accounting = () => {
     <div className="accounting-container">
       <div className="accounting-content">
         <h1>Accounting Entries</h1>
+        {isLoading ? 
+        <div>Loading...</div> : 
         <Paper sx={{ width: "85%", overflow: "hidden" }}>
           <TableContainer sx={{ maxHeight: 540 }}>
             <Table
@@ -89,7 +100,7 @@ const Accounting = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows
+                {response && response
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => (
                     <React.Fragment key={index}>
@@ -141,7 +152,7 @@ const Accounting = () => {
                           {row[0].credit}
                         </TableCell>
                         <TableCell
-                          align="left"
+                          align="center"
                           rowSpan={2}
                           style={{
                             border: "1px solid #dddddd",
@@ -199,15 +210,15 @@ const Accounting = () => {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25, 100]}
+            rowsPerPageOptions={[5, 10]}
             component="div"
-            count={rows.length}
+            count={response && response.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-        </Paper>
+        </Paper>}
       </div>
     </div>
   );

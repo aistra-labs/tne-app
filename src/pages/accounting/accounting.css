@@ -4,6 +4,7 @@
     padding-top: 20px;
     padding-bottom: 20px;
     width: 100%;
+    margin-bottom: 20px;
     .accounting-content{
         display: flex;
         flex-direction: column;
