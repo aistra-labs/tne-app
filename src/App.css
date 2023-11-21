@@ -2,9 +2,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
   .footer-text{
-    position: absolute;
-    bottom: 0px;
+    margin-top: auto;
     margin-bottom: 20px;
+    text-align: center;
   }
 }
