@@ -58,7 +58,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Upload to S3
-        run: aws s3 sync ./build s3://unconstrained-frontend-dev
+        run: aws s3 sync ./build s3://tne-frontend-dev
 
       - name: invalidate cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.DEV_CF_DISTRIBUTION_ID }} --paths "/*"
