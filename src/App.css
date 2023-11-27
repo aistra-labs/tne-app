@@ -1,10 +1,3 @@
 .App {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  .footer-text{
-    position: absolute;
-    bottom: 0px;
-    margin-bottom: 20px;
-  }
+  
 }

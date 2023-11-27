@@ -21,7 +21,7 @@ const columns = [
 
 const generateTableData = () => {
   const data = [];
-  for (let i = 1; i <= 50; i++) {
+  for (let i = 1; i <= 2; i++) {
     data.push([
       {
         date: "25th Oct 2023",
@@ -74,7 +74,7 @@ const Accounting = () => {
         <h1>Accounting Entries</h1>
         {isLoading ? 
         <div>Loading...</div> : 
-        <Paper sx={{ width: "85%", overflow: "hidden" }}>
+        response && response.length > 0 && <Paper sx={{ width: "85%", overflow: "hidden" }}>
           <TableContainer sx={{ maxHeight: 540 }}>
             <Table
               stickyHeader
@@ -107,7 +107,7 @@ const Accounting = () => {
                       <TableRow>
                         <TableCell
                           align="center"
-                          rowSpan={2}
+                          rowSpan={row.length}
                           style={{
                             border: "1px solid #dddddd",
                             padding: "8px",
@@ -153,7 +153,7 @@ const Accounting = () => {
                         </TableCell>
                         <TableCell
                           align="center"
-                          rowSpan={2}
+                          rowSpan={row.length}
                           style={{
                             border: "1px solid #dddddd",
                             padding: "18px",
