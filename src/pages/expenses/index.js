@@ -10,7 +10,10 @@ import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
 import "./expenses.css";
 import usePostApi from "../../components/usePostApi";
+import useGetApi from "../../components/useGetApi";
 import { useLocation, useNavigate } from "react-router-dom";
+import apiRequest from "../../components/api/api";
+import Alert from '@mui/material/Alert';
 
 const columns = [
   { id: "slNo", label: "Sl No", minWidth: 50 },
@@ -22,45 +25,14 @@ const columns = [
   { id: "view", label: "View", minWidth: 100 },
 ];
 
-const formatDate = (date) => {
-  const options = { day: "numeric", month: "short", year: "numeric" };
-  const formattedDate = new Date(date).toLocaleDateString("en-US", options);
-  
-  const day = new Date(date).getDate();
-  const suffix = day >= 11 && day <= 13 ? "th" : { 1: "st", 2: "nd", 3: "rd" }[day % 10] || "th";
-  
-  const formattedWithSuffix = formattedDate.replace(/\d+/, (day) => `${day}${suffix}`);
-  const [month, dayWithoutSuffix, year] = formattedWithSuffix.split(' ');
-
-  return `${dayWithoutSuffix} ${month} ${year}`;
-};
-
-const generateTableData = () => {
-  const data = [];
-  for (let i = 1; i <= 50; i++) {
-    data.push({
-      slNo: i,
-      name: `Employee ${i}`,
-      employeeId: `EMP${i}`,
-      role: `Role ${i}`,
-      submittedDate: formatDate(`2023-11-${i}`),
-      status: i % 2 === 0 ? "Approved" : "Pending",
-      view: true,
-    });
-  }
-  return data;
-};
-
-const rows = generateTableData();
 
 const Expenses = () => {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [pageData, setPageData] = useState({
-    page: 0,
-    limit: 10,
-  });
-
+  const [rowsPerPage, setRowsPerPage] = React.useState(1);
+  const [claimList, setClaimList] = useState();
+  const [isLoading, setIsLoading] =useState(true);
+  const [limit, setLimit] =useState(2);
+  const [error, setError] = useState(false);
   const { state: email } = useLocation();
   const navigate = useNavigate();
 
@@ -70,23 +42,51 @@ const Expenses = () => {
     if (!email) {
       navigate("/login");
     }
+    getClaimDetals();
   }, [email, navigate]);
 
-  const apiUrl = "http://51.112.12.168:8080/tne/api/v1/account/ledger";
-
-  const { response, error, isLoading } = usePostApi(apiUrl, pageData);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const getClaimDetals = async(page=0) => {
+    try {
+      const url = 'claims?page='+page+'&limit='+limit+'&email=naveen.upadhyay@aistra.com';
+      const result = await apiRequest(url, 'GET');
+      console.log(result,'resultresultresult');
+      if(result.data.length > 0){
+      setClaimList(result.data);
+      setIsLoading(false)
+      return true;
+      }else{
+        setError(true)
+        setTimeout(()=>{
+          setError(false)
+        },3000);
+        return false
+      }
+     
+    } catch (error) {
+      // Handle error
+      console.error('Error in POST request:', error);
+    }
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+  const handlePagination = async (page, count) => {
+   const data = await getClaimDetals(page)
+   if(data){
+    setPage(page);
+    setRowsPerPage(count);
+   }
   };
 
-  const onViewClick = () => {
-    navigate("/expense-details", { state: { email } });
+console.log(rowsPerPage,'rowperpage')
+  
+  const rows = claimList && claimList.map(item => {
+    return {
+      ...item,
+      view: true 
+    };
+  });
+
+  const onViewClick = (id) => {
+    navigate("/expense-details/"+id, { state: { email } });
   }
 
   return (
@@ -125,10 +125,10 @@ const Expenses = () => {
                   <TableBody>
                     {rows &&
                       rows
-                        .slice(
-                          page * rowsPerPage,
-                          page * rowsPerPage + rowsPerPage
-                        )
+                        // .slice(
+                        //   page * rowsPerPage,
+                        //   page * rowsPerPage + rowsPerPage
+                        // )
                         .map((row, index) => (
                           <TableRow key={index}>
                             <TableCell
@@ -138,7 +138,7 @@ const Expenses = () => {
                                 padding: "8px",
                               }}
                             >
-                              {row.slNo}
+                              {index + rowsPerPage}
                             </TableCell>
                             <TableCell
                               align="center"
@@ -193,7 +193,11 @@ const Expenses = () => {
                               }}
                             >
                               {row.view ? (
-                                <Button onClick={onViewClick} variant="contained" color="primary">
+                                <Button
+                                  onClick={() => onViewClick(row.claimId)}
+                                  variant="contained"
+                                  color="primary"
+                                >
                                   View
                                 </Button>
                               ) : (
@@ -204,19 +208,42 @@ const Expenses = () => {
                         ))}
                   </TableBody>
                 </Table>
+                <div style={{ textAlign: "right", padding: 10 }}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    style={{ marginRight: 10 }}
+                    onClick={() => {
+                      handlePagination(page - 1, rowsPerPage - limit);
+                    }}
+                  >
+                    {"<"}
+                  </Button>
+
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => {
+                      handlePagination(page + 1, rowsPerPage + limit);
+                    }}
+                  >
+                    {">"}
+                  </Button>
+                </div>
               </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[5, 10]}
+              {/* <TablePagination
+                rowsPerPageOptions={[1, 2]}
                 component="div"
                 count={rows && rows.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-              />
+              /> */}
             </Paper>
           )}
         </div>
+        {error && <Alert severity="error">No More Data Found</Alert>}
       </div>
     </div>
   );
