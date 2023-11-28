@@ -67,6 +67,22 @@
           outline: none;
         }
       }
+      .expense-details-chat {
+        width: 100%;
+        margin: auto; 
+        overflow-y: auto;
+        max-height: 200px;
+      }
+      .expense-details-chat-input{
+        width: 100%;
+        display: flex;
+        justify-content:space-around;
+      }
+      .expense-details-chat-chip{
+        display: flex;
+        flex-direction: column;
+        margin: 10px;
+      }
     }
   }
 }
