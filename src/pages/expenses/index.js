@@ -5,12 +5,9 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
 import "./expenses.css";
-import usePostApi from "../../components/usePostApi";
-import useGetApi from "../../components/useGetApi";
 import { useLocation, useNavigate } from "react-router-dom";
 import apiRequest from "../../components/api/api";
 import Alert from '@mui/material/Alert';
@@ -31,25 +28,24 @@ const Expenses = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(1);
   const [claimList, setClaimList] = useState();
   const [isLoading, setIsLoading] =useState(true);
-  const [limit, setLimit] =useState(2);
+  const [limit, setLimit] =useState(10);
   const [error, setError] = useState(false);
   const { state: email } = useLocation();
   const navigate = useNavigate();
 
   // Redirect to login page if email state is not present
   useEffect(() => {
-    console.log('expenses email', email);
     if (!email) {
       navigate("/login");
     }
-    getClaimDetals();
+    getClaimData();
   }, [email, navigate]);
 
-  const getClaimDetals = async(page=0) => {
+  const getClaimData = async(page=0) => {
     try {
-      const url = 'claims?page='+page+'&limit='+limit+'&email=naveen.upadhyay@aistra.com';
+      console.log(email.email,'email')
+      const url = 'claims?page='+page+'&limit='+limit+'&email='+email.email;
       const result = await apiRequest(url, 'GET');
-      console.log(result,'resultresultresult');
       if(result.data.length > 0){
       setClaimList(result.data);
       setIsLoading(false)
@@ -69,15 +65,13 @@ const Expenses = () => {
   };
 
   const handlePagination = async (page, count) => {
-   const data = await getClaimDetals(page)
+   const data = await getClaimData(page)
    if(data){
     setPage(page);
     setRowsPerPage(count);
    }
   };
 
-console.log(rowsPerPage,'rowperpage')
-  
   const rows = claimList && claimList.map(item => {
     return {
       ...item,
@@ -231,15 +225,6 @@ console.log(rowsPerPage,'rowperpage')
                   </Button>
                 </div>
               </TableContainer>
-              {/* <TablePagination
-                rowsPerPageOptions={[1, 2]}
-                component="div"
-                count={rows && rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              /> */}
             </Paper>
           )}
         </div>

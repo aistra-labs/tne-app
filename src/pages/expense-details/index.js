@@ -22,7 +22,6 @@ const ExpenseDetailsView = () => {
  const [isLoading ,setIsLoading] =useState(true);
   // Redirect to login page if email state is not present
   useEffect(() => {
-    console.log('expense details email', email);
     if (!email) {
       navigate("/login");
     }
@@ -67,7 +66,6 @@ const ExpenseDetailsView = () => {
       const url = 'claim/action';
       const data = { claimId : id, email : email.email.email, action:action };
       const result = await apiRequest(url, 'POST', data);
-      console.log('POST request result:', result);
       if(result.statusCode===200){
         setSucessAlert(true);
         setTimeout(()=>{setSucessAlert(false)},2000)
