@@ -74,7 +74,7 @@ const Accounting = () => {
         <h1>Accounting Entries</h1>
         {isLoading ? 
         <div>Loading...</div> : 
-        <Paper sx={{ width: "85%", overflow: "hidden" }}>
+        response && response.length > 0 && <Paper sx={{ width: "85%", overflow: "hidden" }}>
           <TableContainer sx={{ maxHeight: 540 }}>
             <Table
               stickyHeader
