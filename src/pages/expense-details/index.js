@@ -77,6 +77,7 @@ const ExpenseDetailsView = () => {
 
   const ChatBox = ({ emailId, message, timestamp }) => {
     const isSender = emailId !== email.email.email; 
+    console.log(isSender,emailId,'isSenderisSender');
     return (
       <div className="expense-details-chat-chip" style={{  alignItems: isSender ? 'flex-start' : 'flex-end', }}>
        <Chip
@@ -96,7 +97,7 @@ const ExpenseDetailsView = () => {
 
     try {
       const url = 'conversation';
-      const data = { claimId : id, email : 'arpitcr@unconstrained.work', text:newMessage,  publishToSlack:true };
+      const data = { claimId : id, email : email.email.email, text:newMessage,  publishToSlack:true };
       const result = await apiRequest(url, 'POST', data);
       const updatedConversations = [...claimData.conversations,  result.data ];
       
@@ -188,7 +189,7 @@ const ExpenseDetailsView = () => {
             {claimData &&
               claimData.conversations.map((item) => (
                 <ChatBox
-                  emailId={email}
+                  emailId={item.senderEmail}
                   message={item.text}
                   timestamp={item.sendTime}
                 />
