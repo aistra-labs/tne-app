@@ -32,6 +32,4 @@ const usePostApi = (url, data) => {
   return { response, error, isLoading };
 };
 
- export default usePostApi;
-
-
+export default usePostApi;

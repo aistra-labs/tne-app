@@ -9,7 +9,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import "./accounting.css";
 import usePostApi from "../../components/usePostApi";
-import Link from '@mui/material/Link';
+
 const columns = [
   { id: "date", label: "Date", minWidth: 120 },
   { id: "acctCode", label: "Acct code", minWidth: 100 },
@@ -67,16 +67,14 @@ const Accounting = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
   return (
     <div className="accounting-container">
       <div className="accounting-content">
         <h1>Accounting Entries</h1>
-        <div style={{position:"absolute" , top:"50px", right:"12%" }}>
-        <Link href={"/expense-approvals"}>Claim</Link>
-        </div>
         {isLoading ? 
         <div>Loading...</div> : 
-        response && response.length > 0 && <Paper sx={{ width: "85%", overflow: "hidden" }}>
+        <Paper sx={{ width: "85%", overflow: "hidden" }}>
           <TableContainer sx={{ maxHeight: 540 }}>
             <Table
               stickyHeader
