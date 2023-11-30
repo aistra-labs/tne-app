@@ -150,8 +150,9 @@ const ExpenseDetailsView = () => {
 
           <div className="expense-right-section">
             <div className="expense-observations">
+            
               <div className="obsevation-title">Observations</div>
-              <List>
+              <List style={{height: "310px", overflow: "scroll"}}>
                 {claimData &&
                   claimData.observations.map((item) => (
                     <ListItem>
@@ -163,7 +164,9 @@ const ExpenseDetailsView = () => {
                 <Alert severity="success">Sucessfully Submitted</Alert>
               )}
             </div>
-            <div className="expense-action-btn">
+            {claimData &&
+                  claimData.status === "New" && (
+             <div className="expense-action-btn">
               <Button
                 variant="contained"
                 color="primary"
@@ -181,6 +184,8 @@ const ExpenseDetailsView = () => {
                 Reject
               </Button>
             </div>
+                  )}
+            
           </div>
         </div>
         <div className="expense-details-bottom">

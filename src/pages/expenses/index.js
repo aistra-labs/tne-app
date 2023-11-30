@@ -11,7 +11,7 @@ import "./expenses.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import apiRequest from "../../components/api/api";
 import Alert from '@mui/material/Alert';
-
+import Link from '@mui/material/Link';
 const columns = [
   { id: "slNo", label: "Sl No", minWidth: 50 },
   { id: "name", label: "Name", minWidth: 120 },
@@ -43,7 +43,6 @@ const Expenses = () => {
 
   const getClaimData = async(page=0) => {
     try {
-      console.log(email.email,'email')
       const url = 'claims?page='+page+'&limit='+limit+'&email='+email.email;
       const result = await apiRequest(url, 'GET');
       if(result.data.length > 0){
@@ -55,6 +54,7 @@ const Expenses = () => {
         setTimeout(()=>{
           setError(false)
         },3000);
+        setIsLoading(false)
         return false
       }
      
@@ -87,6 +87,9 @@ const Expenses = () => {
     <div className="expenses-container">
       <div className="accounting-container">
         <div className="accounting-content">
+        <div style={{position:"absolute" , top:"60px", left:"22%" }}>
+        <Link href={"/"}>Home</Link>
+        </div>
           <h1 className="expense-title">Expense Approvals</h1>
           {isLoading ? (
             <div>Loading...</div>
@@ -228,7 +231,7 @@ const Expenses = () => {
             </Paper>
           )}
         </div>
-        {error && <Alert severity="error">No More Data Found</Alert>}
+        {error && <Alert severity="error">No Data Found</Alert>}
       </div>
     </div>
   );
