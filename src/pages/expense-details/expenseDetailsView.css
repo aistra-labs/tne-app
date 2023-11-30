@@ -59,6 +59,7 @@
       padding: 10px;
       border: 1px solid #dddfe2;
       border-radius: 4px;
+      position: relative;
       .comment-field-input {
         width: 700px;
         height: 46px;
@@ -73,6 +74,12 @@
           border: 1px solid #dddfe2;
           outline: none;
         }
+      }
+      .expense-refresh-button{
+        text-transform:capitalize;
+        position:absolute;
+        right:20px;
+        top:5px
       }
       .expense-details-chat {
         width: 100%;

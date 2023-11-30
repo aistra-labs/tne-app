@@ -10,6 +10,7 @@ import TableRow from "@mui/material/TableRow";
 import "./accounting.css";
 import usePostApi from "../../components/usePostApi";
 import Link from '@mui/material/Link';
+import Button from "@mui/material/Button";
 const columns = [
   { id: "date", label: "Date", minWidth: 120 },
   { id: "acctCode", label: "Acct code", minWidth: 100 },
@@ -20,6 +21,7 @@ const columns = [
 ];
 
 const generateTableData = () => {
+ 
   const data = [];
   for (let i = 1; i <= 2; i++) {
     data.push([
@@ -54,13 +56,17 @@ const Accounting = () => {
     page: 0,
     limit: 10,
   });
-
+  const [totalPages, setTotalPages] = useState(0);
   const apiUrl = "http://51.112.12.168:8080/tne/api/v1/account/ledger";
 
   const { response, error, isLoading } = usePostApi(apiUrl, pageData);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    console.log(newPage,'newPage');
+  };
+  const handleLastPage = () => {
+    setPage(Math.ceil(response.length / rowsPerPage) - 1);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -211,6 +217,7 @@ const Accounting = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          <div className="accounting-table-footer-pagination">
           <TablePagination
             rowsPerPageOptions={[5, 10]}
             component="div"
@@ -220,6 +227,12 @@ const Accounting = () => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
+          <Button
+            color="primary" onClick={handleLastPage} style={{textTransform:"capitalize"}}>
+            {"last page"}
+          </Button>
+          </div>
+          
         </Paper>}
       </div>
     </div>
