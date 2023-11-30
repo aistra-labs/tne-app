@@ -32,14 +32,17 @@ const Expenses = () => {
   const [error, setError] = useState(false);
   const { state: email } = useLocation();
   const navigate = useNavigate();
-
   // Redirect to login page if email state is not present
   useEffect(() => {
     if (!email) {
       navigate("/login");
     }
-    getClaimData();
+    
   }, [email, navigate]);
+
+  useEffect(()=>{
+    getClaimData();
+  },[])
 
   const getClaimData = async(page=0) => {
     try {

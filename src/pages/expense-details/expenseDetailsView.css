@@ -34,14 +34,21 @@
         border: 1px solid #dddfe2;
         border-radius: 4px;
         .expense-observations{
+          position: relative;
             .obsevation-title{
                 font-weight: 700;
             }
+            
         }
+        
         .expense-action-btn{
             display: flex;
             column-gap: 14px;
             margin-top: auto;
+        }
+        .expense-details-sucess-alert{
+          position:absolute;
+           bottom:20px;
         }
       }
     }
