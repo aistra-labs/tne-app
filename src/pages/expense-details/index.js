@@ -10,6 +10,7 @@ import apiRequest from "../../components/api/api";
 import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
+
 const ExpenseDetailsView = () => {
   const navigate = useNavigate();
   const [comment, setComment] = useState("");
@@ -47,12 +48,15 @@ const ExpenseDetailsView = () => {
   
   const handleApproveClick = async(action) => {
     try {
+
       const url = 'claim/action';
       const data = { claimId : id, email : email.email.email, action:action };
       const result = await apiRequest(url, 'POST', data);
-      if(result.statusCode===200){
+      if(result.statusCode === 200){
         setSucessAlert(true);
         setTimeout(()=>{setSucessAlert(false)},2000)
+        setTimeout(()=>{navigate("/expense-approvals",{ state : { ...email.email  }})},3000)
+
       }
     } catch (error) {
       // Handle error
@@ -77,7 +81,6 @@ const ExpenseDetailsView = () => {
 
   const ChatBox = ({ emailId, message, timestamp }) => {
     const isSender = emailId !== email.email.email; 
-    console.log(isSender,emailId,'isSenderisSender');
     return (
       <div className="expense-details-chat-chip" style={{  alignItems: isSender ? 'flex-start' : 'flex-end', }}>
        <Chip
@@ -154,15 +157,13 @@ const ExpenseDetailsView = () => {
               <div className="obsevation-title">Observations</div>
               <List style={{height: "310px", overflow: "scroll"}}>
                 {claimData &&
-                  claimData.observations.map((item) => (
-                    <ListItem>
+                  claimData.observations.map((item ,index) => (
+                    <ListItem key={index}>
                       <ListItemText primary={"-  " + item} />
                     </ListItem>
                   ))}
               </List>
-              {successAlert && (
-                <Alert severity="success">Sucessfully Submitted</Alert>
-              )}
+              
             </div>
             {claimData &&
                   claimData.status === "New" && (
@@ -185,8 +186,17 @@ const ExpenseDetailsView = () => {
               </Button>
             </div>
                   )}
-            
+                  {claimData &&
+                  claimData.status !== "New" && (
+                    <h4>Status: {claimData.status}</h4>
+                  )}
+            {successAlert && (
+              <div className="expense-details-sucess-alert">
+                <Alert severity="success">Sucessfully Submitted</Alert>
+                </div>
+             )} 
           </div>
+          
         </div>
         <div className="expense-details-bottom">
           <div className="expense-bottom-thread">Comment Thread</div>
