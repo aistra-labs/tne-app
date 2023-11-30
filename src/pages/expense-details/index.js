@@ -19,8 +19,9 @@ const ExpenseDetailsView = () => {
   const [claimData , setClaimData] = useState('');
   const id = location.pathname.split('/').pop();
   const chatContainerRef = useRef(null);
-  const [successAlert ,setSucessAlert] =useState(false);
- const [isLoading ,setIsLoading] =useState(true);
+  const [successAlert ,setSucessAlert] = useState(false);
+ const [isLoading ,setIsLoading] = useState(true);
+ const [conversation ,setConversation] = useState([]);
   // Redirect to login page if email state is not present
   useEffect(() => {
     if (!email) {
@@ -34,6 +35,7 @@ const ExpenseDetailsView = () => {
       const url = 'claim/detail?claimId='+id;
       const result = await apiRequest(url, 'GET');
       setClaimData(result.data);
+      setConversation(result.data.conversations);
       setIsLoading(false);
     } catch (error) {
       // Handle error
@@ -45,6 +47,17 @@ const ExpenseDetailsView = () => {
     const value = e.target.value;
     setComment(value);
   };
+
+  const refreshConversation = async ()=>{
+    try {
+      const url = 'conversations?claimId='+id;
+      const result = await apiRequest(url, 'GET');
+      setConversation(result.data.conversations);
+    } catch (error) {
+      // Handle error
+      console.error('Error in POST request:', error);
+    }
+  }
   
   const handleApproveClick = async(action) => {
     try {
@@ -188,7 +201,7 @@ const ExpenseDetailsView = () => {
                   )}
                   {claimData &&
                   claimData.status !== "New" && (
-                    <h4>Status: {claimData.status}</h4>
+                    <h4>Status: <span style={{ color: claimData.status === "Approved" ? "green" : "red"}}>{claimData.status}</span></h4>
                   )}
             {successAlert && (
               <div className="expense-details-sucess-alert">
@@ -200,9 +213,14 @@ const ExpenseDetailsView = () => {
         </div>
         <div className="expense-details-bottom">
           <div className="expense-bottom-thread">Comment Thread</div>
+          
+          <Button
+            color="primary" onClick={refreshConversation} className="expense-refresh-button">
+            {"Refresh"}
+          </Button>
+         
           <div className="expense-details-chat" ref={chatContainerRef}>
-            {claimData &&
-              claimData.conversations.map((item) => (
+            {conversation && conversation.map((item) => (
                 <ChatBox
                   emailId={item.senderEmail}
                   message={item.text}

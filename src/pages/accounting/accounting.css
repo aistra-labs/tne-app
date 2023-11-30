@@ -9,5 +9,10 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        .accounting-table-footer-pagination{
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
     }
 }

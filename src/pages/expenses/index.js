@@ -18,6 +18,7 @@ const columns = [
   { id: "employeeId", label: "Employee Id", minWidth: 100 },
   { id: "role", label: "Role", minWidth: 100 },
   { id: "submittedDate", label: "Submitted Date", minWidth: 150 },
+  { id: "amount", label: "Amount", minWidth: 120},
   { id: "status", label: "Status", minWidth: 100 },
   { id: "view", label: "View", minWidth: 100 },
 ];
@@ -90,7 +91,7 @@ const Expenses = () => {
     <div className="expenses-container">
       <div className="accounting-container">
         <div className="accounting-content">
-        <div style={{position:"absolute" , top:"60px", left:"22%" }}>
+        <div style={{position:"absolute" , top:"60px", left:"18%" }}>
         <Link href={"/"}>Home</Link>
         </div>
           <h1 className="expense-title">Expense Approvals</h1>
@@ -124,12 +125,7 @@ const Expenses = () => {
                   </TableHead>
                   <TableBody>
                     {rows &&
-                      rows
-                        // .slice(
-                        //   page * rowsPerPage,
-                        //   page * rowsPerPage + rowsPerPage
-                        // )
-                        .map((row, index) => (
+                      rows.map((row, index) => (
                           <TableRow key={index}>
                             <TableCell
                               align="center"
@@ -175,6 +171,15 @@ const Expenses = () => {
                               }}
                             >
                               {row.submittedDate}
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              style={{
+                                border: "1px solid #dddddd",
+                                padding: "18px",
+                              }}
+                            >
+                              {row.amount}
                             </TableCell>
                             <TableCell
                               align="center"
