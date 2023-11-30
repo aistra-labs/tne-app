@@ -1,0 +1,13 @@
+.expenses-container{
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  
+    .expense-title{
+        text-align: center;
+    }
+    .accounting-content{
+        margin-bottom: 10px;
+    }
+}

@@ -1,11 +1,29 @@
-import './App.css';
-import Accounting from './pages/accounting';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from 'react-router-dom';
+import "./App.css";
+import { Suspense, lazy } from "react";
+import LoginPage from './pages/login';
+import ExpenseDetailsView from './pages/expense-details';
+
+const Home = lazy(() => import('./pages/home'));
+const Expenses = lazy(() => import('./pages/expenses'));
 
 function App() {
   return (
     <div className="App">
-      <Accounting />
-      <div className='footer-text'>The screen shown here is for demo purposes. In production, these entries will be  integrated into the client accounting systems.</div>
+      <Router>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/expense-approvals" element={<Expenses />} />
+            <Route path="/expense-details/:id" element={<ExpenseDetailsView />} />
+          </Routes>
+        </Suspense>
+      </Router>
     </div>
   );
 }
